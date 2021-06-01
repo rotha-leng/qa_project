@@ -1,2 +1,2 @@
-# qa_project
-QA_Project
+
+# Question and Answer System for Flask Project.
