@@ -14,7 +14,7 @@ DB_USER = 'postgres'  # database user
 DB_PWD = '2001'  # database password
 DB_NAME = 'qadb'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://%s:%s@localhost:5432/%s" % (DB_USER, DB_PWD, DB_NAME)
+app.config['DATABASE_URL'] = "postgresql://%s:%s@localhost:5432/%s" % (DB_USER, DB_PWD, DB_NAME)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
