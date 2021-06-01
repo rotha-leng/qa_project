@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SIGN IN</title>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<style>
+    body{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ;
+    background-image: url({{ url_for('static', filename='images/login-bg.png') }});
+
+    }
+.simple-login-container{
+margin: 5px;
+padding: 2%;
+background-color: white;
+color: #031b4e;
+    width:500px;
+    max-width:100%;
+    margin:50px auto;
+}
+.simple-login-container h2{
+    text-align:center;
+    font-size:20px;
+}
+
+.simple-login-container .btn-login{
+    background-color:#0085ff;
+    color:#fff;
+}
+a{
+    color:#fff;
+}
+
+ .login-or {
+    position: relative;
+    font-size: 18px;
+    color: #565656;
+    margin-top: 10px;
+            margin-bottom: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .span-or {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: -2px;
+    margin-left: -25px;
+    background-color: #fff;
+    width: 50px;
+    text-align: center;
+  }
+  .hr-or {
+    background-color: #cdcdcd;
+    height: 1px;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+  }
+
+
+</style>
+
+<body>
+
+{% macro render_field(field) %}
+  <dt>{{ field.label }}
+  <dd>{{ field(**kwargs)|safe }}
+  {% if field.errors %}
+    <ul class=errors>
+    {% for error in field.errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+  </dd>
+{% endmacro %}
+<!------ Include the above in your HEAD tag ---------->
+<!------ Include the above in your HEAD tag ---------->
+<form action="" method="POST">
+
+<div style="margin-top:120px" class="simple-login-container">
+    <h2 style="text-align:left">Sign in to your account</h2><br>
+    <div class="container" style="padding-top: 10px;">
+        {% with messages = get_flashed_messages() %}
+           {% if messages %}
+           <div style="color:red">
+              <ul>
+                {% for message in messages %}
+                   <li>{{ message }}</li>
+                {% endfor %}
+              </ul>
+           </div>
+           {% endif %}
+
+        {% endwith %}
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 form-group">
+            <p>Email Address:</p>
+            <input type="email" name="email" class="form-control" placeholder="Username">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 form-group">
+            <p>Password:</p>
+            <input type="password" name="password" placeholder="Enter your Password" class="form-control">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 form-group">
+            <button type="submit" class="btn btn-block btn-login">Sign In</button>
+        </div>
+    </div>
+
+<div class="login-or">
+        <hr class="hr-or">
+        <span class="span-or">OR</span>
+      </div>
+
+     <div class="row">
+        <div class="col-md-12 form-group">
+            <button style="background-color: white; color:#0085ff; border: 2px solid #0085ff" type="submit" class="btn btn-block btn-login"><img style="width:20px;height:20px;margin: 0px 10px 3px 10px" src="{{url_for('static', filename='images/googl.jpg')}}">Sign In with Google</button>
+        </div>
+    </div>
+
+      <div  class="row">
+        <div  class="col-md-12 form-group">
+            <button style="background-color: #1500ff" type="submit" class="btn btn-block btn-login"><img style="border-radius:50%;width:25px;height:25px;margin: 0px 10px 3px 10px" src="{{url_for('static', filename='images/git.jfif')}}">Sign In with GitHub</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <a style="color: #0085ff" href="#">Forgot Password? </a> and <a style="color: #0085ff" href="/register"> Sign up Here!</a>
+        </div>
+    </div>
+</div>
+</form>
+
+</body>
+</html>
