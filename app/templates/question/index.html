@@ -1,17 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>FlaskBlog</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <script src="https://kit.fontawesome.com/d118e75654.js" crossorigin="anonymous"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <title>View Question</title>
+    <script>
+    $(document).on('click', '#click-btn', function(event){
+    $.ajax({
+        url: '/Upvote',
+        type: "post",
+        contentType: 'application/json;charset=UTF-8'
+        dataType: "json",
+        data : JSON.stringify({'postid' : $('#click-btn').data('postid')}),
+        success: function(response){
+            console.log(response);
+            },
+            error: function(xhr){
+                console.log(xhr);
+                }
+                }).done(function(data)
+                {
+                    location.reload();
+                    });
+                    event.preventDefault();
+                    });
+
+</script>
+<style>
+#btncomment1{
+display: none;
+}
+
+#btnanswer1{
+display: none;
+}
+
+
+</style>
 </head>
 <body>
+  {% include 'base.html' %}
+  {% macro render_field(field) %}
+  <dt>{{ field.label }}
+  <dd>{{ field(**kwargs)|safe }}
+  {% if field.errors %}
+    <ul class=errors>
+    {% for error in field.errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+  </dd>
+  {% endmacro %}
 
-{% extends 'base.html' %}
 
-{% block content %}
-    <h1>{% block title %} Welcome to FlaskBlog {% endblock %}</h1>
-{% endblock %}
+
+<div style="padding:5%" class="container-fluid">
+        <div class="row">
+              <div class="col-8">
+<div class="container">
+
+
+                {% for question in Question %}
+    <h6 style=" color: #0085ff;text-align:left; margin: 0px 0px 0px 15px">QUESTION ???</h6><br>
+
+    {% for question in Question %}
+  <form action="/Upvote/Question/{{question.ID}}" method="POST">
+     {% for vote in Vote %}
+      {% endfor %}
+     <button  id="vote" style="border:1px solid #0085ff;margin: 0px 0px 0px 15px;color:white; background-color:#0085ff; padding:8px; border-radius:50%; width: 70px" type="submit">{{vote}} votes</button>
+             </form>
+
+ {% endfor %}<br>
+                <a href="{{ url_for('ViewQuestionAnswer', QuestionID=question['ID']) }}">
+                    <h3 style=" color: #031b4e; text-align:left; margin: 0px 0px 0px 15px">  {{question["Question_Tittle"]}} </h3>
+                       </a>
+                <br>
+                    <h5 style=" color: #031b4e; text-align:left; margin: 0px 0px 0px 15px"><span>{{question["Question_body"] |safe}}</span></h5>
+                    <p style=" color: #404040; text-align:left; margin: 0px 0px 0px 15px">{{TotalA}} Answer(s) - Post-Date/Time-{{question["Created"]}} - By-{{question["FullName"]}} - <strong style="padding:5px;background-color:grey;color:white;border-radius: 10%">{{question["Tag_Topic"]}}</strong></p>
+                <br><br><br>
+     <nav class="nav nav-pills nav-justified">
+
+         <a id="btncmt" class="nav-link" href="#">Add Comment</a>
+
+              <a class="nav-link" href="#">Subscript</a>
+              <a class="nav-link" href="#">Share</a>
+              <a class="nav-link" href="#">Report</a>
+
+              <a class="nav-link" href="#"><img style="border-radius:50%; height:30px;width:30px" src="{{ avatars.gravatar(Avatar) }}"> Logged in as -{{User['FullName']}}</a>
+
+            </nav>
+
+    {% endfor %}
+<br>
+    <br>
+    {% for i in Question %}
+<form  id="btncomment1"  action="/Comment/Question/{{i.ID}}" method="POST">
+    {{ form.hidden_tag() }}
+    {{ render_field(form.Comment, class='form-control', placeholder='Leave a comment...',) }}<br>
+
+    {% if current_user.is_authenticated %}
+   {{ form.btncomment(class_="btn btn-primary") }}
+    <br><br>
+      <p>Logged in as: {{User['FullName']}}</p>
+     {% else %}
+    {{ form.btncomment(class_="btn btn-primary", disabled=True) }}
+    {% endif %}
+
+     </form>
+    <h5>{{Totalcmt}} Comment(s)</h5>
+        {% for comment in Comment %}
+<br>
+    <p style=" color: #031b4e; text-align:left; margin: 0px 0px 0px 0px">  . {{comment["Comment"]| safe}} , <span style="color:black">Comment : <img style="border-radius:50%; height:25px;width:25px" src="{{ avatars.gravatar(Avatar) }}"> By - {{comment["FullName"]}} - Date - {{comment["Created_On"]}}</span></p>
+    {% endfor %}
+<br>
+    <br>
+
+
+<form id="btnanswer1" action="/Answer/Question/{{i.ID}}" method="POST">
+{{ form.hidden_tag() }}
+    {{ render_field(form.Answer, class='form-control', placeholder='Answer a question...',) }}<br>
+    {% if current_user.is_authenticated %}
+   {{ form.btnanswer(class_="btn btn-primary") }}
+        <br><br>
+      <p>Logged in as: {{User['FullName']}}</p>
+    {% else %}
+    {{ form.btnanswer(class_="btn btn-primary", disabled=True) }}
+    {% endif %}
+        {% endfor %}<br><br><br>
+
+    </form>
+    <h5>{{TotalA}} Answer(s)</h5>
+    {% for answer in  Answer %}
+    <br>
+    <p style=" color: #031b4e; text-align:left; margin: 0px 0px 0px 0px">  . {{answer["Answer"] | safe}} . <span style="color:black">Answer : <img style="border-radius:50%; height:25px;width:25px" src="{{ avatars.gravatar(Avatar) }}"> By - {{answer["FullName"]}} - Date - {{answer["Created_On"]}}</span></p>
+    {% endfor %}<br><br>
+</div>
+<button id="btnans" type="button" class="btn btn-white btn-lg btn-block" style="color:#0085ff;border: 1px solid #0085ff">Submit an Answer</button>
+    <br><br>
+
+                </div>
+
+
+            <div class="col related_post" style="width: 200px;  margin: 0px 0px 0px 200px">
+      <h6 style="color: #031b4e ; padding: 0px; text-align: left">RELATED</h6><br>
+      <div class="box" style="border: 1px solid #d0d4d8;width: 100px;  font-size: 25px">
+        <i class="fas fa-globe" style="margin: 0px 0px 0px 40px;color:#0085ff"></i>
+        <br>
+        <p style="text-align: center; font-size: 15px;">Intant DNS<br>
+          look up tool<br>
+          <a href="#" style="text-align: center;">Tool</a>
+        </p>
+        <div class="related">
+
+
+        </div>
+
+      </div>
+                <br>
+
+      {% for question in Limit %}
+                <a href="{{ url_for('ViewQuestionAnswer', QuestionID=question['ID']) }}">
+                    <h6 style="color: #031b4e">{{question["Question_Tittle"]}}</h6>
+                <p style="color:#0085ff ;"><i class="far fa-question-circle"></i> Question</p>
+                </a>
+        {% endfor %}
+
+    </div>
+
+
+        </div>
+
+    </div>
+
+
+
+
+
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+ <script src="https://cdn.tiny.cloud/1/lgfeziaxbazeuw63ihouu1n5kbd9p72t0spaeke17i36tqsn/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+  <script>
+    tinymce.init({selector:'textarea',
+              setup: function (editor) {
+                      editor.on('change', function () {
+                          tinymce.triggerSave();
+                      });
+                  }
+            });
+  </script>
+
+<script>
+
+
+    $(document).ready(function(){
+  $("#btncmt").click(function(){
+    $("#btncomment1").toggle(500);
+  });
+});
+
+
+
+$(document).ready(function(){
+  $("#btnans").click(function(){
+    $("#btnanswer1").toggle(500);
+  });
+});
+
+</script>
 
 
 </body>

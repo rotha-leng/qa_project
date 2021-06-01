@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASK QUESTION</title>
+
+</head>
+<body>
+  {% include 'base.html' %}
+{% macro render_field(field) %}
+<dt>{{ field.label }}
+<dd>{{ field(**kwargs)|safe }}
+{% if field.errors %}
+  <ul class=errors style="color:red">
+  {% for error in field.errors %}
+    <li>{{ error }}</li>
+  {% endfor %}
+  </ul>
+{% endif %}
+</dd>
+{% endmacro %}
+
+
+
+  <div class="container-fluid" style=" padding: 80px;">
+    <div class="row">
+      <div class="col-8">
+        <h2>Ask The Community</h2>
+        <p style="text-align: left;">Running into trouble? Our developer is here to help! Ask anything related to system administration
+          programming,devops,open source, or the DigitalOcean platform</p>
+        <form action="/ask" class="form" role="form" method="POST">
+            {{ form.hidden_tag() }}
+
+                 {{ render_field(form.Title, class='form-control', placeholder='How to Set Up Automatic...') }}<br>
+
+                 {{ render_field(form.Body, class='form-control', placeholder='Write your full question here...') }}<br>
+
+                 {{ render_field(form.Tag, class='form-control', placeholder='Select Tages for the Question') }}<br>
+
+                <div style="padding: 20px;"></div>
+                 <button id="" type="submit" class="btn btn-primary btn-lg btn-block" style="background-color: white; color:#0085ff;">Post My Question</button>
+
+        </form>
+
+      </div>
+
+    </div>
+  </div>
+
+
+
+  <script src="https://cdn.tiny.cloud/1/lgfeziaxbazeuw63ihouu1n5kbd9p72t0spaeke17i36tqsn/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+  <script>
+    tinymce.init({selector:'textarea',
+              setup: function (editor) {
+                      editor.on('change', function () {
+                          tinymce.triggerSave();
+                      });
+                  }
+            });
+  </script>
+    <script>
+      $(document).ready(function() {
+        $('#Title').on('keyup', function(){
+
+          title = $(this).val()
+
+            $.ajax({
+              url: '/getRelatedPost',
+              type: 'GET',
+              data: {title: title},
+            })
+            .done(function(data) {
+              li = '<ul>'
+              $.each(data, function(index, val) {
+                 /* iterate through array or object */
+                 // console.log(val.title)
+                 li +='<li><a href="/Post/'+val.id+'">'+val.title+'</a></li>'
+              });
+              li += '</ul>'
+
+              $('div.related_post').find('div.related').html(li)
+
+            })
+        })
+      });
+    </script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+
+
+
+</body>
+</html>

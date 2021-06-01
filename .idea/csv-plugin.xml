@@ -59,6 +59,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\app\templates\question\create.html">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\app\templates\question\index.html">
           <value>
             <Attribute>

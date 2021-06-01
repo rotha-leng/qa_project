@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PROFILE</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+    <style>
+        .card-block{
+        border: 2px solid black;
+        }
+        .card-block input{
+           text-color: black;
+           border-style: groove;
+        }
+
+        .card-block p{
+        text-align: center;
+        font-size: 20px;
+        }
+        #save:hover{
+        background-color:grey;
+        color: white;
+        }
+
+
+    </style>
+
+</head>
+<body>
+
+{% include 'base.html' %}
+<h2 style="color:#0085ff" class="text-center"> Post By {{user['FullName']}}</h2>
+<h6 style="color:#0085ff" class="text-center"> <img style="border-radius:50%; height:50px;width:50px; padding:5px" src="{{ avatars.gravatar(Avatar) }}"> Logged in as {{user['FullName']}}</h6>
+	<table style="width: 100%" class="table mypost">
+		<thead style="color:#0085ff">
+		<th>Question Tittle</th>
+		<th>Question Body</th>
+		<th>Tag Topic</th>
+		<th>Actions</th>
+		</thead>
+		{% for post in Question %}
+		<tbody>
+		<br>
+			<tr style="color: #031b4e">
+				<td onclick="window.open('/View/Question/{{post['ID']}}')" style="cursor: pointer;">{{post['Question_Tittle']}}</td>
+				<td onclick="window.open('/View/Question/{{post['ID']}}')" style="cursor: pointer;">{{post['Question_body'] | safe}}</td>
+				<td onclick="window.open('/View/Question/{{post['ID']}}')" style="cursor: pointer;">{{post['Tag_Topic']}}</td>
+				<td>
+					<a href="/View/Question/{{post['ID'] }}/Edit">Edit</a>
+					<a href="/View/Question/{{ post['ID'] }}/Delete" class="text-danger">Delete</a>
+					{% endfor %}
+				</td>
+			</tr>
+
+
+
+		</tbody>
+
+	</table>
+
+
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+{% block js %}
+	<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+	<script>
+		$(document).ready(function() {
+			$('table.mypost').DataTable(100)
+		});
+	</script>
+{% endblock %}
+
