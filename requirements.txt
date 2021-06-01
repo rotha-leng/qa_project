@@ -51,5 +51,4 @@ uptime==3.0.1
 urllib3==1.26.4
 virtualenv==20.4.3
 Werkzeug==1.0.1
-WMI==1.5.1
 wrapt==1.12.1
